@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
 import { connectDB } from "./src/config/connect.js";
+import { registerRoutes } from "./src/routes/index.js";
 
 // // Load environment variables
 // dotenv.config();
@@ -27,8 +28,18 @@ import { connectDB } from "./src/config/connect.js";
 // });
 
 const start = async () => {
-    await connectDB(process.env.MONGO_URI);
+  await connectDB(process.env.MONGO_URI);
   const app = Fastify({ logger: true });
+
+  // app.register({
+  //   cors: { origin: "*" },
+  //   pingInterval: 2000,
+  //   pingTimeout: 5000,
+  //   transports: ["websocket"],
+  // });
+
+  await registerRoutes(app);
+
 
   app.listen(
     { port: process.env.PORT || 3000, host: "0.0.0.0" },
@@ -39,6 +50,7 @@ const start = async () => {
       console.log(`🚀 Server running at ${address}`);
     }
   );
+  
 };
 
 start();
